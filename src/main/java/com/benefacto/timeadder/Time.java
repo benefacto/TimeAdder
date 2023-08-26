@@ -5,10 +5,10 @@ package com.benefacto.timeadder;
  * to a string representation.
  */
 public class Time {
-    private final int hoursPerHalfDay = 12;
-    private final int hoursPerDay = 24;
-    private final int minutesPerHour = 60;
-    private final String timeStringRegex = "(1[0-2]|0?[1-9]):[0-5][0-9] (AM|PM)";
+    private static final int HOURS_PER_HALF_DAY = 12;
+    private static final int HOURS_PER_DAY = 24;
+    private static final int MINUTES_PER_HOUR = 60;
+    private static final String TIME_STRING_REGEX = "(1[0-2]|0?[1-9]):[0-5][0-9] (AM|PM)";    
     private int hours;
     private int minutes;
 
@@ -22,7 +22,7 @@ public class Time {
      *                   - "(AM|PM)" matches either "AM" or "PM".
      */
     public Time(String timeString) {
-        if (timeString == null || !timeString.matches(timeStringRegex)) {
+        if (timeString == null || !timeString.matches(TIME_STRING_REGEX)) {
             throw new IllegalArgumentException("Invalid time format");
         }
 
@@ -33,9 +33,9 @@ public class Time {
         // Extract minutes and AM/PM
         String[] minAmPm = parts[1].split(" ");
         minutes = Integer.parseInt(minAmPm[0]);
-        if (minAmPm[1].equals("PM") && hours < hoursPerHalfDay) {
-            hours += hoursPerHalfDay;
-        } else if (minAmPm[1].equals("AM") && hours == hoursPerHalfDay) {
+        if (minAmPm[1].equals("PM") && hours < HOURS_PER_HALF_DAY) {
+            hours += HOURS_PER_HALF_DAY;
+        } else if (minAmPm[1].equals("AM") && hours == HOURS_PER_HALF_DAY) {
             hours = 0;
         }
     }
@@ -46,13 +46,14 @@ public class Time {
      * @param minutesToAdd The number of minutes to add (can be negative to subtract minutes).
      */
     public void addMinutes(int minutesToAdd) {
-        long totalMinutesLong = (long) hours * minutesPerHour + minutes + minutesToAdd;
-        totalMinutesLong %= (long) hoursPerDay * minutesPerHour;
+        // Uses long calculations to easily avoid underflows/overflows
+        long totalMinutesLong = (long) hours * MINUTES_PER_HOUR + minutes + minutesToAdd;
+        totalMinutesLong %= (long) HOURS_PER_DAY * MINUTES_PER_HOUR;
         if (totalMinutesLong < 0) {
-            totalMinutesLong += (long) hoursPerDay * minutesPerHour;
+            totalMinutesLong += (long) HOURS_PER_DAY * MINUTES_PER_HOUR;
         }
-        hours = (int) (totalMinutesLong / minutesPerHour);
-        minutes = (int) (totalMinutesLong % minutesPerHour);
+        hours = (int) (totalMinutesLong / MINUTES_PER_HOUR);
+        minutes = (int) (totalMinutesLong % MINUTES_PER_HOUR);
     }    
 
     /**
@@ -62,9 +63,9 @@ public class Time {
      */
     @Override
     public String toString() {
-        String amPm = hours < hoursPerHalfDay ? "AM" : "PM";
-        int amPmHours = hours > hoursPerHalfDay ? hours - hoursPerHalfDay : hours;
-        amPmHours = amPmHours == 0 ? hoursPerHalfDay : amPmHours;
+        String amPm = hours < HOURS_PER_HALF_DAY ? "AM" : "PM";
+        int amPmHours = hours > HOURS_PER_HALF_DAY ? hours - HOURS_PER_HALF_DAY : hours;
+        amPmHours = amPmHours == 0 ? HOURS_PER_HALF_DAY : amPmHours;
         return String.format("%d:%02d %s", amPmHours, minutes, amPm);
     }
 }
