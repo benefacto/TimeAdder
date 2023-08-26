@@ -14,3 +14,8 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+task runMain(type: JavaExec) {
+    main = 'com.benefacto.timeadder.TimeAdder'
+    classpath = sourceSets.main.runtimeClasspath
+}
