@@ -4,12 +4,12 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TimeAdderTest {
 
     @Test
     public void testAddMinutes() {
-        // Test cases
         runTest("9:13 AM", 200);
         runTest("9:13 AM", 47);
         runTest("3:45 PM", 75);
@@ -22,6 +22,25 @@ public class TimeAdderTest {
         runTest("9:13 AM", 720);
         runTest("9:13 AM", 1440);
         runTest("9:13 AM", -720);
+        runTest("12:00 AM", 1);
+        runTest("11:59 PM", 1);
+        runTest("3:45 PM", 0);
+        runTest("9:13 AM", 10080);
+        runTest("9:13 AM", -10080);
+        runTest("11:30 AM", 31);
+        runTest("11:30 PM", 31);
+        runTest("12:00 AM", -1441);
+        runTest("11:55 AM", 10);
+        runTest("11:55 PM", 10);
+    }
+
+    @Test
+    public void testInvalidInputCases() {
+        assertThrows(IllegalArgumentException.class, () -> TimeAdder.addMinutes("25:00 AM", 10));
+        assertThrows(IllegalArgumentException.class, () -> TimeAdder.addMinutes("11:65 AM", 10));
+        assertThrows(IllegalArgumentException.class, () -> TimeAdder.addMinutes("11:00 XM", 10));
+        assertThrows(IllegalArgumentException.class, () -> TimeAdder.addMinutes("ABCD", 10));
+        assertThrows(IllegalArgumentException.class, () -> TimeAdder.addMinutes(null, 10));
     }
 
     public void runTest(String inputTime, int minutes) {
