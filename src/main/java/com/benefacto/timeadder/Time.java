@@ -1,9 +1,11 @@
 package com.benefacto.timeadder;
 
 public class Time {
+    private final int hoursPerHalfDay = 12;
+    private final int hoursPerDay = 24;
+    private final int minutesPerHour = 60; 
     private int hours;
     private int minutes;
-    private boolean isAM; // true if AM, false if PM
 
     // Structure: "[H]H:MM {AM|PM}"
     public Time(String timeString) {
@@ -24,41 +26,39 @@ public class Time {
         // Extract minutes and AM/PM
         String[] minAmPm = parts[1].split(" ");
         minutes = Integer.parseInt(minAmPm[0]);
-        isAM = minAmPm[1].equals("AM");
+        if (minAmPm[1].equals("PM") && hours < hoursPerHalfDay) {
+            hours += hoursPerHalfDay;
+        } else if (minAmPm[1].equals("AM") && hours == hoursPerHalfDay) {
+            hours = 0;
+        }
     }
 
-    public void addMinutes(int minutes) {
-        // Calculate total current minutes
-        int totalMinutes = this.hours * 60 + this.minutes + minutes;
-
+    public void addMinutes(int minutesToAdd) {
+        int totalMinutes = hours * minutesPerHour + minutes + minutesToAdd;
+        
         // Handle days overflow/underflow
-        totalMinutes %= (24 * 60); // 24 hours * 60 minutes
-
-        // Handle negative minutes (going backwards in time)
+        totalMinutes %= (hoursPerDay * minutesPerHour);
+        
         if (totalMinutes < 0) {
-            totalMinutes += (24 * 60);
+            totalMinutes += (hoursPerDay * minutesPerHour);
         }
-
-        // Calculate new hours and minutes
-        this.hours = totalMinutes / 60;
-        this.minutes = totalMinutes % 60;
-
-        // Adjust 12-hour format and AM/PM
-        if (this.hours == 0) {
-            this.hours = 12;
-            this.isAM = true;
-        } else if (this.hours == 12) {
-            this.isAM = false;
-        } else if (this.hours > 12) {
-            this.hours -= 12;
-            this.isAM = !this.isAM;
+        
+        int newHours = totalMinutes / minutesPerHour;
+        
+        if (newHours >= hoursPerDay) {
+            newHours -= hoursPerDay;
         }
+        
+        hours = newHours;
+        minutes = totalMinutes % minutesPerHour;
     }
 
     @Override
     public String toString() {
-        String amPm = isAM ? "AM" : "PM";
-        return String.format("%d:%02d %s", hours, minutes, amPm);
+        String amPm = hours < hoursPerHalfDay ? "AM" : "PM";
+        int amPmHours = hours > hoursPerHalfDay ? hours - hoursPerHalfDay : hours;
+        amPmHours = amPmHours == 0 ? hoursPerHalfDay : amPmHours;
+        return String.format("%d:%02d %s", amPmHours, minutes, amPm);
     }
 
 }

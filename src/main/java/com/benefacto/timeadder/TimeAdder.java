@@ -2,7 +2,7 @@ package com.benefacto.timeadder;
 
 public class TimeAdder {
   public static void main(String[] args) {
-    System.out.println(addMinutes("9:13 AM", 200));
+    System.out.println(addMinutes("12:00 PM", -1));
   }
 
   public static String addMinutes(String time, int minutes) {

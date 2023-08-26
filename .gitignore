@@ -22,3 +22,48 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+git 
+
+# Compiled binaries
+build/
+out/
+
+# IDE specific (e.g., IntelliJ IDEA)
+.idea/
+*.iml
+*.iws
+
+# Local Gradle cache
+.gradle/
+
+# Log files
+*.log
+
+# Mac OS-specific storage
+.DS_Store
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~.nib
+
+# Gradle Wrapper binary and properties (you can include the jar and properties file if you want to ensure everyone uses the same Gradle version)
+gradlew.bat
+
+# If you are storing the gradle wrapper in your repository (which some do to ensure everyone uses the same Gradle version), you'd keep these:
+# gradlew
+# gradle/wrapper/gradle-wrapper.jar
+# gradle/wrapper/gradle-wrapper.properties
+
+# Otherwise, you can ignore the whole wrapper directory
+gradle/wrapper/
+
+# Visual Studio Code
+.vscode

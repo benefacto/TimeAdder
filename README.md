@@ -3,12 +3,12 @@
 # Compile
 
 ```bash
-javac -d bin src/main/java/com/benefacto/timeadder/TimeAdder.java
+gradle build -x test
 ```
 
-# Run
+# Test
 
 
 ```
-java -cp bin com.benefacto.timeadder.TimeAdder
+gradle test
 ```
