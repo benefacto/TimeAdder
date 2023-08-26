@@ -1,21 +1,28 @@
 package com.benefacto.timeadder;
 
+/**
+ * Represents a 12-hour format time with capabilities to add minutes and convert
+ * to a string representation.
+ */
 public class Time {
     private final int hoursPerHalfDay = 12;
     private final int hoursPerDay = 24;
-    private final int minutesPerHour = 60; 
+    private final int minutesPerHour = 60;
+    private final String timeStringRegex = "(1[0-2]|0?[1-9]):[0-5][0-9] (AM|PM)";
     private int hours;
     private int minutes;
 
-    // Structure: "[H]H:MM {AM|PM}"
+    /**
+     * Constructs a Time object from a time string in [H]H:MM {AM|PM} format.
+     *
+     * @param timeString The input time string.
+     *                   The regex "(1[0-2]|0?[1-9]):[0-5][0-9] (AM|PM)" ensures valid input:
+     *                   - "(1[0-2]|0?[1-9])" matches the hour, which can be from 01 to 12 (or 1 to 12 without a leading zero).
+     *                   - "[0-5][0-9]" matches the minutes, which can be from 00 to 59.
+     *                   - "(AM|PM)" matches either "AM" or "PM".
+     */
     public Time(String timeString) {
-        // The regular expression (1[0-2]|0?[1-9]):[0-5][0-9] (AM|PM) is used to
-        // validate the timeString format.
-        // (1[0-2]|0?[1-9]) matches the hour, which can be from 01 to 12 (or 1 to 12
-        // without a leading zero).
-        // [0-5][0-9] matches the minutes, which can be from 00 to 59.
-        // (AM|PM) matches either "AM" or "PM".
-        if (timeString == null || !timeString.matches("(1[0-2]|0?[1-9]):[0-5][0-9] (AM|PM)")) {
+        if (timeString == null || !timeString.matches(timeStringRegex)) {
             throw new IllegalArgumentException("Invalid time format");
         }
 
@@ -33,26 +40,26 @@ public class Time {
         }
     }
 
+    /**
+     * Adds the specified number of minutes to the current time.
+     * 
+     * @param minutesToAdd The number of minutes to add (can be negative to subtract minutes).
+     */
     public void addMinutes(int minutesToAdd) {
-        int totalMinutes = hours * minutesPerHour + minutes + minutesToAdd;
-        
-        // Handle days overflow/underflow
-        totalMinutes %= (hoursPerDay * minutesPerHour);
-        
-        if (totalMinutes < 0) {
-            totalMinutes += (hoursPerDay * minutesPerHour);
+        long totalMinutesLong = (long) hours * minutesPerHour + minutes + minutesToAdd;
+        totalMinutesLong %= (long) hoursPerDay * minutesPerHour;
+        if (totalMinutesLong < 0) {
+            totalMinutesLong += (long) hoursPerDay * minutesPerHour;
         }
-        
-        int newHours = totalMinutes / minutesPerHour;
-        
-        if (newHours >= hoursPerDay) {
-            newHours -= hoursPerDay;
-        }
-        
-        hours = newHours;
-        minutes = totalMinutes % minutesPerHour;
-    }
+        hours = (int) (totalMinutesLong / minutesPerHour);
+        minutes = (int) (totalMinutesLong % minutesPerHour);
+    }    
 
+    /**
+     * Returns a string representation of the time in [H]H:MM {AM|PM} format.
+     *
+     * @return A string representation of the time.
+     */
     @Override
     public String toString() {
         String amPm = hours < hoursPerHalfDay ? "AM" : "PM";
@@ -60,5 +67,4 @@ public class Time {
         amPmHours = amPmHours == 0 ? hoursPerHalfDay : amPmHours;
         return String.format("%d:%02d %s", amPmHours, minutes, amPm);
     }
-
 }
