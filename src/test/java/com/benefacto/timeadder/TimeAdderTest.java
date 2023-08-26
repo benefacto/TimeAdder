@@ -15,12 +15,13 @@ public class TimeAdderTest {
      * Tests the addition of minutes to various times using the TimeAdder utility.
      */
     @Test
-    public void testAddMinutes() {
+    public void testValidTimeAdditions() {
         runTest("9:13 AM", 200);
         runTest("9:13 AM", 47);
         runTest("3:45 PM", 75);
         runTest("9:13 AM", -13);
         runTest("3:45 PM", -45);
+        runTest("10:15 PM", 130);
         runTest("11:59 AM", 1);
         runTest("11:59 PM", 1);
         runTest("12:00 AM", -1);
@@ -46,7 +47,7 @@ public class TimeAdderTest {
      * Tests the TimeAdder utility for various invalid input cases.
      */
     @Test
-    public void testInvalidInputCases() {
+    public void testInvalidTimeFormats() {
         assertThrows(IllegalArgumentException.class, () -> TimeAdder.addMinutes("25:00 AM", 10));
         assertThrows(IllegalArgumentException.class, () -> TimeAdder.addMinutes("11:65 AM", 10));
         assertThrows(IllegalArgumentException.class, () -> TimeAdder.addMinutes("11:00 XM", 10));

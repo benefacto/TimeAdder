@@ -46,7 +46,7 @@ public class Time {
      * @param minutesToAdd The number of minutes to add (can be negative to subtract minutes).
      */
     public void addMinutes(int minutesToAdd) {
-        // Uses long calculations to easily avoid underflows/overflows
+        // long calculations to avoid under/overflows with minutesToAdd as Integer.MAX_VALUE or Integer.MIN_VALUE
         long totalMinutesLong = (long) hours * MINUTES_PER_HOUR + minutes + minutesToAdd;
         totalMinutesLong %= (long) HOURS_PER_DAY * MINUTES_PER_HOUR;
         if (totalMinutesLong < 0) {
