@@ -7,11 +7,13 @@
 - Support for adding/subtracting minutes to/from a 12-hour formatted time string.
 - Comprehensive test coverage ensuring reliability.
 - Easy integration with Gradle build tools.
+- Docker support for easy setup and execution.
 
 ## Requirements
 
 - Java 20 or higher (Developed with OpenJDK 20.0.2)
-- Gradle build tool (if not available, you can use the Gradle Wrapper included in the project)
+- Gradle build tool (if not using Docker)
+- Docker and Docker Compose (for Docker setup)
 
 ## Compilation
 
@@ -23,13 +25,25 @@ gradle build -x test
 
 ## Testing
 
+### Using Gradle
+
 Ensure the accuracy and reliability of `TimeAdder` by running the test suite:
 
 ```bash
 gradle test
 ```
 
+### Using Docker
+
+To run the tests using Docker Compose:
+
+```bash
+docker-compose up --build test
+```
+
 ## Execution
+
+### Using Gradle
 
 To use `TimeAdder`, provide the time and the number of minutes you wish to add or subtract. The format should be:
 
@@ -41,6 +55,14 @@ For instance, to subtract 1 minute from "12:00 PM", you would execute:
 
 ```bash
 gradle runMain --args="12:00 PM -1"
+```
+
+### Using Docker
+
+To run the application using Docker Compose:
+
+```bash
+docker-compose up --build app
 ```
 
 ## Future Improvements
