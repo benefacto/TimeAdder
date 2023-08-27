@@ -15,7 +15,8 @@ public class TimeAdder {
    * @param args Command line arguments.
    */
   public static void main(String[] args) {
-    if (!areValidArguments(args)) {
+    if (areArgumentsInvalid(args)) {
+      System.out.println("Please provide the time string ([H]H:MM {AM|PM}) and minutes integer as arguments.");
       return;
     }
 
@@ -35,12 +36,12 @@ public class TimeAdder {
    * @param args Command line arguments.
    * @return true if the provided arguments are valid, false otherwise.
    */
-  private static boolean areValidArguments(String[] args) {
+  private static boolean areArgumentsInvalid(String[] args) {
     if (args.length < 3) {
-      System.out.println("Please provide the time string ([H]H:MM {AM|PM}) and minutes integer as arguments.");
       return false;
     }
-    return true;
+    String timeString = String.format("%s %s", args[0], args[1]);
+    return !timeString.matches(Time.TIME_STRING_REGEX);
   }
 
   /**

@@ -8,7 +8,10 @@ public class Time {
     private static final int HOURS_PER_HALF_DAY = 12;
     private static final int HOURS_PER_DAY = 24;
     private static final int MINUTES_PER_HOUR = 60;
-    private static final String TIME_STRING_REGEX = "(1[0-2]|0?[1-9]):[0-5][0-9] (AM|PM)";    
+    private static final String HOUR_PATTERN = "(1[0-2]|0?[1-9])"; // Matches hour from 01 to 12 (or 1 to 12 without leading zero).
+    private static final String MINUTE_PATTERN = "[0-5][0-9]";     // Matches minutes from 00 to 59.
+    private static final String AMPM_PATTERN = "(AM|PM)";          // Matches either "AM" or "PM".
+    static final String TIME_STRING_REGEX = HOUR_PATTERN + ":" + MINUTE_PATTERN + " " + AMPM_PATTERN;
     private int hours;
     private int minutes;
 
@@ -21,13 +24,13 @@ public class Time {
      *                   - "[0-5][0-9]" matches the minutes, which can be from 00 to 59.
      *                   - "(AM|PM)" matches either "AM" or "PM".
      */
-    public Time(String timeString) {
+    public Time(final String timeString) {
         if (timeString == null || !timeString.matches(TIME_STRING_REGEX)) {
             throw new IllegalArgumentException("Invalid time format");
         }
 
         // Split the string into hours, minutes, and AM/PM parts
-        String[] parts = timeString.split(":");
+        final String[] parts = timeString.split(":");
         hours = Integer.parseInt(parts[0]);
 
         // Extract minutes and AM/PM
@@ -45,7 +48,7 @@ public class Time {
      * 
      * @param minutesToAdd The number of minutes to add (can be negative to subtract minutes).
      */
-    public void addMinutes(int minutesToAdd) {
+    public void addMinutes(final int minutesToAdd) {
         // long calculations to avoid under/overflows with minutesToAdd as Integer.MAX_VALUE or Integer.MIN_VALUE
         long totalMinutesLong = (long) hours * MINUTES_PER_HOUR + minutes + minutesToAdd;
         totalMinutesLong %= (long) HOURS_PER_DAY * MINUTES_PER_HOUR;
